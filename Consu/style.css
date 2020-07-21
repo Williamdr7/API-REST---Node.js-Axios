@@ -1,0 +1,38 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: auto;
+    height: auto;
+    text-align: center;
+    margin: 100px auto;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    display: flex;
+    flex-direction: column;
+}
+
+h1 {
+    font-size: 70px;
+}
+
+h4 {
+    font-size: 40px;
+}
+
+ul {
+    font-size: 30px;
+}
+
+input {
+    margin: auto;
+    width: 350px;
+    height: 50px;
+}
+
+button {
+    width: 100px;
+    margin: 30px auto;
+}

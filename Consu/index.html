@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <title>Social Medias</title>
+</head>
+
+<body>
+    <div class="container">
+
+        <h1>Social Medias</h1>
+        <hr>
+        <h4>More Famous</h4>
+        <br>
+        <ul id="list">
+        </ul>
+        <hr>
+        <h4>New Media</h4>
+        <input type="text" title="title" id="title" placeholder="title" data-title="title" name="title">
+        <input type="number" title="year" id="year" placeholder="year" data-year="year" name="year">
+        <button type="button" onclick="createMedia()">Create</button>
+        <h4>Edit Media</h4>
+        <input type="text" id="idEdit" name="idEdit" readonly placeholder="ID">
+        <input type="text" title="title" id="titleEdit" placeholder="title" data-title="title" name="title">
+        <input type="number" title="year" id="yearEdit" placeholder="year" data-year="year" name="year">
+        <button type="button" onclick="updateMedia()">Edit</button>
+
+
+    </div>
+
+</body>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    function deleteMedia(item) {
+
+        var id = item.getAttribute("data-id")
+        axios.delete("http://localhost:4000/media/" + id).then((item) => {
+            event("Removed")
+        }).catch((erro) => {
+            console.log(erro)
+        })
+    }
+
+
+    function loadMedia(list) {
+
+        var id = list.getAttribute("data-id")
+        var title = list.getAttribute("data-title")
+        var year = list.getAttribute("data-year")
+
+        var idField = document.getElementById("idEdit")
+        var titleField = document.getElementById("titleEdit")
+        var yearField = document.getElementById("yearEdit")
+
+        idField.value = id
+        titleField.value = title
+        yearField.value = year
+
+    }
+
+
+
+    function updateMedia() {
+        var idInput = document.getElementById("idEdit")
+        var titleInput = document.getElementById("titleEdit")
+        var yearInput = document.getElementById("yearEdit")
+
+        var id = idInput.value;
+
+
+        var media = {
+            title: titleInput.value,
+            year: yearInput.value,
+            id: id
+        }
+        axios.put("http://localhost:4000/media/" + id, media).then((res) => {
+            if (res.status == 200) {
+                alert("Success")
+            }
+        }).catch((erro) => {
+            console.log(erro)
+        })
+
+
+    }
+
+
+    function createMedia() {
+        var title = document.getElementById("title")
+        var year = document.getElementById("year")
+        var id = 3
+
+        var media = {
+            title: title.value,
+            year: year.value,
+            id: id
+        }
+
+        if (media != undefined && media != null) {
+            axios.post("http://localhost:4000/media", media).then((res) => {
+                if (res.status == 200) {
+                    event.alert("Success")
+                }
+            }).catch((erro) => {
+                console.log(erro)
+            })
+        } else {
+            event.alert("Undefined Values")
+        }
+
+    }
+    axios.get("http://localhost:4000/medias").then((res) => {
+        console.log(res)
+        var medias = res.data
+        var list = document.getElementById("list")
+
+        medias.forEach((media) => {
+            var item = document.createElement("li")
+
+            item.setAttribute("data-title", media.title)
+            item.setAttribute("data-year", media.year)
+            item.setAttribute("data-id", media.id)
+
+            item.innerHTML = `Title: ${media.title},Year: ${media.year}`
+
+            var deleteBtn = document.createElement("button")
+            deleteBtn.innerHTML = "deletar"
+            deleteBtn.addEventListener("click", function() {
+                deleteMedia(item)
+            })
+
+            var editBtn = document.createElement("button")
+            editBtn.innerHTML = "edit"
+            editBtn.addEventListener("click", function() {
+                loadMedia(item)
+            })
+
+            item.appendChild(editBtn)
+            item.appendChild(deleteBtn)
+
+            list.appendChild(item)
+        })
+    }).catch((erro) => {
+        console.log(erro)
+    })
+</script>
+
+</html>
